@@ -11,6 +11,24 @@ export default function Home() {
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const shareToLine = () => {
+    if (!result || typeof window === "undefined") return;
+
+    const scoreMatch = result.match(/(\d{1,3})点/);
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const currentUrl = window.location.href;
+
+    const text = score
+      ? `私のAI導入準備度は${score}点でした！ #AI診断`
+      : "私のAI導入準備度を診断しました！ #AI診断";
+
+    const shareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(
+      currentUrl
+    )}&text=${encodeURIComponent(text)}`;
+
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  };
+
   const handleChange = (questionId: number, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
     setError(null);
@@ -132,16 +150,37 @@ export default function Home() {
           </form>
         ) : (
           <div className="mt-10">
-            <div className="mb-6 flex items-center justify-between gap-4">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-semibold">診断結果</h2>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700"
-              >
-                もう一度診断する
-              </button>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={shareToLine}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#06C755] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
+                >
+                  <span className="h-2 w-2 rounded-full bg-white" />
+                  <span>LINEで結果を共有する</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="rounded-full border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700"
+                >
+                  もう一度診断する
+                </button>
+              </div>
             </div>
+            {(() => {
+              const match = result.match(/(\d{1,3})点/);
+              if (!match) return null;
+              return (
+                <p className="mb-4 text-sm text-zinc-700 dark:text-zinc-300">
+                  あなたのAI活用への準備レベルは{" "}
+                  <span className="font-bold text-emerald-500">{match[0]}</span>{" "}
+                  でした。
+                </p>
+              );
+            })()}
             <article className="prose prose-zinc dark:prose-invert max-w-none rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
               <ReactMarkdown
                 components={{
