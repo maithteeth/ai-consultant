@@ -406,18 +406,18 @@ export default function Home() {
                       );
                     },
                     ul: ({ children }) => (
-                      <div className="bg-white dark:bg-zinc-900 border border-t-0 border-zinc-200 dark:border-zinc-800 rounded-b-2xl p-6 sm:p-8 pt-0 -mt-2 relative z-0">
-                        <ul className="space-y-3">
+                      <div className="bg-white dark:bg-zinc-900 border border-t-0 border-zinc-200 dark:border-zinc-800 rounded-b-2xl p-6 sm:p-8 pt-0 relative z-0">
+                        <ul className="space-y-4">
                           {children}
                         </ul>
                       </div>
                     ),
                     li: ({ children }) => (
-                      <li className="flex gap-3 text-zinc-700 dark:text-zinc-300 leading-relaxed text-[15px] sm:text-base">
-                        <span className="text-zinc-400 dark:text-zinc-600 mt-1.5 flex-shrink-0">
+                      <li className="flex items-start gap-3 text-zinc-700 dark:text-zinc-300 leading-relaxed text-[15px] sm:text-base">
+                        <span className="text-zinc-400 dark:text-zinc-600 mt-[0.4rem] flex-shrink-0">
                           <div className="w-1.5 h-1.5 rounded-full bg-current" />
                         </span>
-                        <span>{children}</span>
+                        <span className="flex-1">{children}</span>
                       </li>
                     ),
                     strong: ({ children }) => (
