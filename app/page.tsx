@@ -382,7 +382,7 @@ export default function Home() {
                       }
 
                       return (
-                        <div className={"flex items-center gap-3 " + bgColor + " " + borderColor + " border p-4 sm:p-5 rounded-t-2xl border-b-0 -mb-9 relative z-10"}>
+                        <div className={"flex items-center gap-3 mt-8 first:mt-0 " + bgColor + " " + borderColor + " border-t border-x p-4 sm:p-5 rounded-t-2xl relative z-10"}>
                           <div className={"p-2 bg-white dark:bg-zinc-900 rounded-xl shadow-sm " + iconColor}>
                             <Icon className="w-6 h-6 stroke-[2.5]" />
                           </div>
@@ -394,11 +394,10 @@ export default function Home() {
                     },
                     p: ({ children }) => {
                       const text = String(children);
-                      // Skip the score text as it's parsed in the header
                       if (text.match(/^\d{1,3}点/)) return null;
 
                       return (
-                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl rounded-tr-none p-6 sm:p-8 pt-8 sm:pt-10 shadow-sm relative z-0">
+                        <div className="bg-white dark:bg-zinc-900 border-x border-zinc-200 dark:border-zinc-800 px-6 sm:px-8 py-4 shadow-sm relative z-0 [&:last-child]:rounded-b-2xl [&:last-child]:border-b [&:nth-child(2)]:pt-8">
                           <p className="text-zinc-700 dark:text-zinc-300 leading-loose text-[15px] sm:text-base">
                             {children}
                           </p>
@@ -406,7 +405,7 @@ export default function Home() {
                       );
                     },
                     ul: ({ children }) => (
-                      <div className="bg-white dark:bg-zinc-900 border border-t-0 border-zinc-200 dark:border-zinc-800 rounded-b-2xl p-6 sm:p-8 pt-0 relative z-0">
+                      <div className="bg-white dark:bg-zinc-900 border-x border-zinc-200 dark:border-zinc-800 px-6 sm:px-8 py-2 shadow-sm relative z-0 [&:last-child]:rounded-b-2xl [&:last-child]:border-b [&:last-child]:pb-8">
                         <ul className="space-y-4">
                           {children}
                         </ul>
