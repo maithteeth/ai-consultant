@@ -13,6 +13,9 @@ import {
   Share2,
   RefreshCcw,
   CheckCircle2,
+  Printer,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
 
 // Animation variants
@@ -146,10 +149,10 @@ export default function Home() {
         {!result && (
           <div className="mb-10 text-center">
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600 dark:from-zinc-100 dark:to-zinc-500">
-              業務環境・IT活用 問診
+              DX・AIの可能性を探る問診
             </h1>
             <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-              20問に答えると、AIがあなたの業務環境を分析し、最適なITツールやAI活用の第一歩を提案します。
+              20問に答えると、AIがあなたの業務環境を分析し、DXやAI活用のポテンシャルと具体的な第一歩を提案します。
             </p>
           </div>
         )}
@@ -358,25 +361,21 @@ export default function Home() {
 
                 // Determine styling based on the section header
                 let Icon = CheckCircle2;
-                let bgColor = "bg-zinc-100 dark:bg-zinc-800";
                 let iconColor = "text-zinc-900 dark:text-zinc-100";
-                let borderColor = "border-zinc-200 dark:border-zinc-700";
+                let borderColor = "border-t-zinc-400 dark:border-t-zinc-600"; // Top border color
 
                 if (section.includes("隠れた損失")) {
                   Icon = AlertTriangle;
-                  bgColor = "bg-red-50 dark:bg-red-950/20";
                   iconColor = "text-red-600 dark:text-red-400";
-                  borderColor = "border-red-200 dark:border-red-900/50";
+                  borderColor = "border-t-red-400 dark:border-t-red-600";
                 } else if (section.includes("処方箋")) {
                   Icon = Lightbulb;
-                  bgColor = "bg-amber-50 dark:bg-amber-950/20";
                   iconColor = "text-amber-600 dark:text-amber-400";
-                  borderColor = "border-amber-200 dark:border-amber-900/50";
+                  borderColor = "border-t-amber-400 dark:border-t-amber-600";
                 } else if (section.includes("進め方")) {
                   Icon = Route;
-                  bgColor = "bg-blue-50 dark:bg-blue-950/20";
                   iconColor = "text-blue-600 dark:text-blue-400";
-                  borderColor = "border-blue-200 dark:border-blue-900/50";
+                  borderColor = "border-t-blue-400 dark:border-t-blue-600";
                 }
 
                 // Extract the first line (the h2 text) and the rest
@@ -385,19 +384,19 @@ export default function Home() {
                 const contentLines = lines.slice(1).join('\n');
 
                 return (
-                  <div key={idx} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                    {/* Card Header */}
-                    <div className={`flex items-center gap-3 p-4 sm:p-5 border-b ${bgColor} ${borderColor}`}>
-                      <div className={`p-2 bg-white dark:bg-zinc-900 rounded-xl shadow-sm ${iconColor}`}>
+                  <div key={idx} className={`bg-white dark:bg-zinc-900 border-x border-b border-t-4 border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm flex flex-col p-6 sm:p-8 ${borderColor} print:break-inside-avoid print:shadow-none print:border-zinc-300`}>
+                    {/* Unified Card Header */}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className={`p-2 rounded-xl bg-zinc-50 dark:bg-zinc-800 ${iconColor}`}>
                         <Icon className="w-6 h-6 stroke-[2.5]" />
                       </div>
-                      <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 m-0">
+                      <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 m-0 leading-tight">
                         {headerLine}
                       </h2>
                     </div>
 
                     {/* Card Body */}
-                    <div className="p-6 sm:p-8 flex flex-col gap-5 text-[15px] sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                    <div className="flex flex-col gap-5 text-[15px] sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed">
                       <ReactMarkdown
                         components={{
                           h2: () => null, // Already extracted
@@ -439,7 +438,33 @@ export default function Home() {
               })}
             </motion.div>
 
-            <div className="mt-16 text-center">
+            <div className="mt-16 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 print:hidden">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-6 text-base font-bold text-zinc-700 dark:text-zinc-300 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                title="ブラウザの印刷からPDFとして保存"
+              >
+                <Printer className="w-5 h-5" />
+                PDFで保存
+              </button>
+
+              <a
+                href={`mailto:?subject=${encodeURIComponent("DX・AIの可能性を探る問診 結果レポート")}&body=${encodeURIComponent("以下はDX・AI導入に向けた診断結果です。\n\n" + result + "\n\n---")}`}
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-6 text-base font-bold text-zinc-700 dark:text-zinc-300 shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+              >
+                <Mail className="w-5 h-5" />
+                メールに添付
+              </a>
+
+              <a
+                href="mailto:info@example.com?subject=DX・AI導入のご相談"
+                className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-blue-600 dark:bg-blue-500 px-6 text-base font-bold text-white shadow hover:scale-105 transition-transform"
+              >
+                <MessageCircle className="w-5 h-5" />
+                専門家に相談
+              </a>
+
               <button
                 type="button"
                 onClick={handleReset}
