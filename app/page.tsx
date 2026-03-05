@@ -351,85 +351,92 @@ export default function Home() {
 
             {/* Markdown Parsing into rich cards */}
             <motion.div variants={fadeIn} className="space-y-8">
-              <div className="w-full flex flex-col gap-8">
-                <ReactMarkdown
-                  components={{
-                    h2: ({ children }) => {
-                      const text = String(children);
-                      // Skip rendering the score header since we have the visual gauge
-                      if (text.includes("準備レベル")) return null;
+              {result && result.split(/(?=## )/).map((section, idx) => {
+                if (!section.trim()) return null;
+                // Exclude the score section if it's rendered by the visual gauge gauge
+                if (section.includes("準備レベル")) return null;
 
-                      let Icon = CheckCircle2;
-                      let bgColor = "bg-zinc-100 dark:bg-zinc-800";
-                      let iconColor = "text-zinc-900 dark:text-zinc-100";
-                      let borderColor = "border-zinc-200 dark:border-zinc-700";
+                // Determine styling based on the section header
+                let Icon = CheckCircle2;
+                let bgColor = "bg-zinc-100 dark:bg-zinc-800";
+                let iconColor = "text-zinc-900 dark:text-zinc-100";
+                let borderColor = "border-zinc-200 dark:border-zinc-700";
 
-                      if (text.includes("隠れた損失")) {
-                        Icon = AlertTriangle;
-                        bgColor = "bg-red-50 dark:bg-red-950/20";
-                        iconColor = "text-red-600 dark:text-red-400";
-                        borderColor = "border-red-200 dark:border-red-900/50";
-                      } else if (text.includes("処方箋")) {
-                        Icon = Lightbulb;
-                        bgColor = "bg-amber-50 dark:bg-amber-950/20";
-                        iconColor = "text-amber-600 dark:text-amber-400";
-                        borderColor = "border-amber-200 dark:border-amber-900/50";
-                      } else if (text.includes("進め方")) {
-                        Icon = Route;
-                        bgColor = "bg-blue-50 dark:bg-blue-950/20";
-                        iconColor = "text-blue-600 dark:text-blue-400";
-                        borderColor = "border-blue-200 dark:border-blue-900/50";
-                      }
+                if (section.includes("隠れた損失")) {
+                  Icon = AlertTriangle;
+                  bgColor = "bg-red-50 dark:bg-red-950/20";
+                  iconColor = "text-red-600 dark:text-red-400";
+                  borderColor = "border-red-200 dark:border-red-900/50";
+                } else if (section.includes("処方箋")) {
+                  Icon = Lightbulb;
+                  bgColor = "bg-amber-50 dark:bg-amber-950/20";
+                  iconColor = "text-amber-600 dark:text-amber-400";
+                  borderColor = "border-amber-200 dark:border-amber-900/50";
+                } else if (section.includes("進め方")) {
+                  Icon = Route;
+                  bgColor = "bg-blue-50 dark:bg-blue-950/20";
+                  iconColor = "text-blue-600 dark:text-blue-400";
+                  borderColor = "border-blue-200 dark:border-blue-900/50";
+                }
 
-                      return (
-                        <div className={"flex items-center gap-3 mt-8 first:mt-0 " + bgColor + " " + borderColor + " border-t border-x p-4 sm:p-5 rounded-t-2xl relative z-10"}>
-                          <div className={"p-2 bg-white dark:bg-zinc-900 rounded-xl shadow-sm " + iconColor}>
-                            <Icon className="w-6 h-6 stroke-[2.5]" />
-                          </div>
-                          <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
-                            {children}
-                          </h2>
-                        </div>
-                      );
-                    },
-                    p: ({ children }) => {
-                      const text = String(children);
-                      if (text.match(/^\d{1,3}点/)) return null;
+                // Extract the first line (the h2 text) and the rest
+                const lines = section.split('\n');
+                const headerLine = lines[0].replace(/^##\s*/, '');
+                const contentLines = lines.slice(1).join('\n');
 
-                      return (
-                        <div className="bg-white dark:bg-zinc-900 border-x border-zinc-200 dark:border-zinc-800 px-6 sm:px-8 py-4 shadow-sm relative z-0 [&:last-child]:rounded-b-2xl [&:last-child]:border-b [&:nth-child(2)]:pt-8">
-                          <p className="text-zinc-700 dark:text-zinc-300 leading-loose text-[15px] sm:text-base">
-                            {children}
-                          </p>
-                        </div>
-                      );
-                    },
-                    ul: ({ children }) => (
-                      <div className="bg-white dark:bg-zinc-900 border-x border-zinc-200 dark:border-zinc-800 px-6 sm:px-8 py-2 shadow-sm relative z-0 [&:last-child]:rounded-b-2xl [&:last-child]:border-b [&:last-child]:pb-8">
-                        <ul className="space-y-4">
-                          {children}
-                        </ul>
+                return (
+                  <div key={idx} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                    {/* Card Header */}
+                    <div className={`flex items-center gap-3 p-4 sm:p-5 border-b ${bgColor} ${borderColor}`}>
+                      <div className={`p-2 bg-white dark:bg-zinc-900 rounded-xl shadow-sm ${iconColor}`}>
+                        <Icon className="w-6 h-6 stroke-[2.5]" />
                       </div>
-                    ),
-                    li: ({ children }) => (
-                      <li className="flex items-start gap-3 text-zinc-700 dark:text-zinc-300 leading-relaxed text-[15px] sm:text-base">
-                        <span className="text-zinc-400 dark:text-zinc-600 mt-[0.4rem] flex-shrink-0">
-                          <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                        </span>
-                        <span className="flex-1">{children}</span>
-                      </li>
-                    ),
-                    strong: ({ children }) => (
-                      <strong className="font-bold text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md mx-0.5 border border-zinc-200 dark:border-zinc-700">
-                        {children}
-                      </strong>
-                    ),
-                  }}
-                >
-                  {/* We need to pre-process the result to ensure paragraphs directly following h2s are wrapped properly if needed, but our CSS handles the basic layout nicely. */}
-                  {result}
-                </ReactMarkdown>
-              </div>
+                      <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 m-0">
+                        {headerLine}
+                      </h2>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="p-6 sm:p-8 flex flex-col gap-5 text-[15px] sm:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                      <ReactMarkdown
+                        components={{
+                          h2: () => null, // Already extracted
+                          h3: ({ children }) => (
+                            <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 mt-2">
+                              {children}
+                            </h3>
+                          ),
+                          p: ({ children }) => {
+                            const text = String(children);
+                            if (text.match(/^\d{1,3}点/)) return null;
+                            return <p>{children}</p>;
+                          },
+                          ul: ({ children }) => (
+                            <ul className="list-disc leading-loose pl-5 space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="list-decimal leading-loose pl-5 space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600">
+                              {children}
+                            </ol>
+                          ),
+                          li: ({ children }) => (
+                            <li>{children}</li>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="font-bold text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md mx-0.5 border border-zinc-200 dark:border-zinc-700">
+                              {children}
+                            </strong>
+                          ),
+                        }}
+                      >
+                        {contentLines}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                );
+              })}
             </motion.div>
 
             <div className="mt-16 text-center">
